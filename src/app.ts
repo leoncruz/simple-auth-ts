@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import express from 'express';
 import bodyParser from 'body-parser';
+import { AppDataSource } from './data-source';
 
 const app = express();
 
@@ -11,6 +12,8 @@ app.get('/', (_req, resp) => {
   resp.send({ body: 'hello world' });
 });
 
-app.listen(3333, () => {
-  console.log(`server listen on port ${3333}`);
+AppDataSource.initialize().then(() => {
+  app.listen(3333, () => {
+    console.log(`server listen on port ${3333}`);
+  });
 });
