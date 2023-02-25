@@ -1,29 +1,29 @@
 import { Request, Response } from 'express';
-import { AppDataSource } from '../data-source';
-import { User } from '../entities/User';
+import { Registation } from '../accounts/Registration';
 
 const create = async (req: Request, resp: Response) => {
   const { email, password } = req.body;
 
-  const newUser = new User({ email, password });
+  const { user, userExists, userInvalid } = await Registation.registrationUser({
+    email,
+    password
+  });
 
-  const result = await AppDataSource.manager
-    .createQueryBuilder()
-    .insert()
-    .into(User)
-    .values(newUser)
-    .orIgnore()
-    .returning('*')
-    .execute();
-
-  if (Object.keys(result.generatedMaps[0]).length === 0) {
+  if (userExists || userInvalid) {
     resp.statusCode = 422;
-    return resp.json({ success: false, data: 'invalid data' });
-  } else {
-    const user = new User(result.generatedMaps[0]);
-
-    return resp.json({ data: user });
+    return resp.json({ data: {}, message: 'invalid data', success: false });
   }
+
+  if (!user) {
+    resp.statusCode = 400;
+    return resp.json({
+      data: {},
+      message: 'an unexpected error occours',
+      success: false
+    });
+  }
+
+  resp.json({ data: user, success: true });
 };
 
 export const UserRegistrationController = { create };
