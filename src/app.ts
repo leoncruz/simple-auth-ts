@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import { AppDataSource } from './data-source';
 import { UserRegistrationController } from './controllers/UserRegistrationController';
 import { UserSessionController } from './controllers/UserSessionController';
+import { UserConfirmationController } from './controllers/UserConfirmationController';
 
 const app = express();
 
@@ -17,6 +18,10 @@ app.get('/', (_req, resp) => {
 app.post('/users/signup', UserRegistrationController.create);
 
 app.post('/users/signin', UserSessionController.create);
+
+app.patch('/users/confirm', UserConfirmationController.update);
+
+app.post('/users/confirm', UserConfirmationController.create);
 
 AppDataSource.initialize().then(() => {
   app.listen(3333, () => {
