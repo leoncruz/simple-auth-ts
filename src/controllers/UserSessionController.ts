@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
-import { AppDataSource } from '../data-source';
 import { User } from '../entities/User';
+import { Repo } from '../utils/Repo';
 
 const create = async (req: Request, resp: Response) => {
   const { email, password } = req.body;
 
-  const user = await AppDataSource.manager.findOneBy(User, { email });
+  const user = await Repo.findOne(User, { email });
 
   if (!user || !user.passwordIsValid(password)) {
     resp.statusCode = 422;
