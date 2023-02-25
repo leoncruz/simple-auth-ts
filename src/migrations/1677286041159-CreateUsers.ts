@@ -9,11 +9,8 @@ export class CreateUsers1677286041159 implements MigrationInterface {
           {
             name: 'id',
             type: 'bigint',
-            isPrimary: true
-          },
-          {
-            name: 'name',
-            type: 'varchar'
+            isPrimary: true,
+            isGenerated: true
           },
           {
             name: 'email',
@@ -23,6 +20,42 @@ export class CreateUsers1677286041159 implements MigrationInterface {
           {
             name: 'encrypted_password',
             type: 'text'
+          },
+          {
+            name: 'created_at',
+            type: 'timestamptz',
+            default: 'now()'
+          },
+
+          {
+            name: 'updated_at',
+            type: 'timestamptz',
+            default: 'now()'
+          },
+          {
+            name: 'confirmation_token',
+            type: 'text',
+            isNullable: true
+          },
+          {
+            name: 'confirmation_token_sent_at',
+            type: 'timestamptz',
+            isNullable: true
+          },
+          {
+            name: 'confirmation_at',
+            type: 'timestamptz',
+            isNullable: true
+          },
+          {
+            name: 'reset_password_token',
+            type: 'text',
+            isNullable: true
+          },
+          {
+            name: 'reset_password_token_sent_at',
+            type: 'timestamptz',
+            isNullable: true
           }
         ]
       })
