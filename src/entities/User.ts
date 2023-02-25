@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ObjectLiteral,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm';
@@ -9,7 +10,7 @@ import bcrypt from 'bcrypt';
 
 @Entity('users')
 export class User {
-  constructor(user: Partial<User>) {
+  constructor(user: Partial<object | ObjectLiteral | null>) {
     Object.assign(this, user);
   }
 
