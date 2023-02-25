@@ -4,14 +4,19 @@ import { Registation } from '../accounts/Registration';
 const create = async (req: Request, resp: Response) => {
   const { email, password } = req.body;
 
-  const { user, userExists, userInvalid } = await Registation.registrationUser({
+  const {
+    user,
+    userExists,
+    userInvalid,
+    errors = {}
+  } = await Registation.registrationUser({
     email,
     password
   });
 
   if (userExists || userInvalid) {
     resp.statusCode = 422;
-    return resp.json({ data: {}, message: 'invalid data', success: false });
+    return resp.json({ errors, message: 'invalid data', success: false });
   }
 
   if (!user) {

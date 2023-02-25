@@ -1,11 +1,13 @@
 import { User } from '../entities/User';
 import { Repo } from '../utils/Repo';
 import { GenerateToken } from './GenerateToken';
+import { Validation } from './Validation';
 
 type RegistrationResult = {
   userExists?: boolean;
   user?: User;
   userInvalid?: boolean;
+  errors?: object;
 };
 
 const registrationUser = async (
@@ -13,9 +15,9 @@ const registrationUser = async (
 ): Promise<RegistrationResult> => {
   const newUser = new User(userData);
 
-  const valid = true; // validate user data;
+  const { valid, errors } = Validation.validateForRegistration(newUser);
 
-  if (!valid) return { userInvalid: false };
+  if (!valid) return { errors: errors, userInvalid: !valid };
 
   const user = await Repo.insert<User>(User, newUser);
 
