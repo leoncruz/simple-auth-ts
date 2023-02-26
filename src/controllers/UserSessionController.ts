@@ -1,31 +1,21 @@
 import { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
-
-import { User } from '../entities/User';
-import { Repo } from '../utils/Repo';
+import { Session } from '../accounts/Session';
 
 const create = async (req: Request, resp: Response) => {
   const { email, password } = req.body;
 
-  const user = await Repo.findOne(User, { email });
+  const { data, success, message } = await Session.create(email, password);
 
-  if (!user || !user.passwordIsValid(password)) {
+  if (!success) {
     resp.statusCode = 422;
-    return resp.json({ success: false, data: 'invalid data' });
+    return resp.json({ data: {}, success: false, message });
   }
 
-  if (!user.confirmedAccount) {
-    resp.statusCode = 422;
-    return resp.json({ success: false, data: 'account not confirmed' });
-  }
-
-  const token = jwt.sign({ data: user.id }, 'MY_BIGGEST_SECRET', {
-    expiresIn: '5m'
-  });
+  const { accessToken, refreshToken } = data ?? {};
 
   resp.statusCode = 200;
   resp.json({
-    data: { access_token: token, refresh_token: '' },
+    data: { access_token: accessToken, refresh_token: refreshToken },
     success: true
   });
 };
