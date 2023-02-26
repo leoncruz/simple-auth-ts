@@ -3,10 +3,12 @@ import {
   CreateDateColumn,
   Entity,
   ObjectLiteral,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm';
 import bcrypt from 'bcrypt';
+import { AccessToken } from './AccessToken';
 
 @Entity('users')
 export class User {
@@ -43,6 +45,9 @@ export class User {
 
   @Column({ name: 'reset_password_token_sent_at' })
   resetPasswordTokenSentAt: Date;
+
+  @OneToMany(() => AccessToken, (accessToken) => accessToken.user)
+  accessTokens: AccessToken[];
 
   set password(password: string) {
     this.encryptedPassword = bcrypt.hashSync(password, 10);
