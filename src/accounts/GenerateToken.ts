@@ -1,7 +1,7 @@
 import { JwtPayload } from 'jsonwebtoken';
 import { Crypto } from '../utils/Crypto';
 
-const EXPIRATION_TIME_FOR_ACCESS_TOKEN = '5m';
+const EXPIRATION_TIME_FOR_ACCESS_TOKEN = '15m';
 const ACCESS_TOKEN_SECRET = 'MY_BIGGEST_SECRET';
 
 const generateConfirmAccountToken = (): Array<string> => {

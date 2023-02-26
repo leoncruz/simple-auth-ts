@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
+import { User } from '../entities/User';
+import { Repo } from '../utils/Repo';
 import { GenerateToken } from './GenerateToken';
 
-const init = (req: Request, resp: Response, next: NextFunction) => {
+const init = async (req: Request, resp: Response, next: NextFunction) => {
   const authorizationHeader = req.get('Authorization');
   const [prefix, accessToken] = (authorizationHeader ?? '').split(' ');
 
@@ -25,6 +27,19 @@ const init = (req: Request, resp: Response, next: NextFunction) => {
       message
     });
   }
+
+  const user = new User(await Repo.findOne(User, data));
+
+  if (!user.id) {
+    resp.statusCode = 401;
+    return resp.json({
+      data: {},
+      success: false,
+      message
+    });
+  }
+
+  req.user = user;
 
   next();
 };

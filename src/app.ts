@@ -1,11 +1,13 @@
 import 'reflect-metadata';
 import express from 'express';
 import bodyParser from 'body-parser';
+
 import { AppDataSource } from './data-source';
 import { UserRegistrationController } from './controllers/UserRegistrationController';
 import { UserSessionController } from './controllers/UserSessionController';
 import { UserConfirmationController } from './controllers/UserConfirmationController';
 import { RequireAuthMiddleware } from './accounts/RequireAuthMiddleware';
+import { PostController } from './controllers/PostController';
 
 const app = express();
 
@@ -22,7 +24,7 @@ app.post('/users/confirm', UserConfirmationController.create);
 
 const privateRoutes = express.Router();
 
-privateRoutes.get('/posts', (_req, resp) => resp.json({ data: [] }));
+privateRoutes.get('/posts', PostController.index);
 
 app.use(RequireAuthMiddleware.init, privateRoutes);
 
