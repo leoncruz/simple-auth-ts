@@ -8,6 +8,7 @@ import { UserSessionController } from './controllers/UserSessionController';
 import { UserConfirmationController } from './controllers/UserConfirmationController';
 import { RequireAuthMiddleware } from './accounts/RequireAuthMiddleware';
 import { PostController } from './controllers/PostController';
+import { UserResetPasswordController } from './controllers/UserResetPasswordController';
 
 const app = express();
 
@@ -23,6 +24,15 @@ app.post('/users/refresh', UserSessionController.refresh);
 app.patch('/users/confirm', UserConfirmationController.update);
 
 app.post('/users/confirm', UserConfirmationController.create);
+
+app.post('/users/reset_password', UserResetPasswordController.create);
+
+app.post(
+  '/users/reset_password/validate',
+  UserResetPasswordController.validate
+);
+
+app.patch('/users/reset_password', UserResetPasswordController.update);
 
 const privateRoutes = express.Router();
 

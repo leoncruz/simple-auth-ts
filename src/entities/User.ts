@@ -64,4 +64,8 @@ export class User {
   get confirmedAccount(): boolean {
     return this.confirmationAt !== null;
   }
+
+  changePassword(newPassword: string) {
+    this.password = newPassword;
+  }
 }
