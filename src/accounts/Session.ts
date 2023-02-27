@@ -14,7 +14,9 @@ const create = async (
   email: string,
   password: string
 ): Promise<SessionResult> => {
-  const user = new User(await Repo.findOne(User, { email }));
+  const user = new User(
+    await Repo.findOne(User, { where: { email }, relations: ['accessTokens'] })
+  );
 
   if (!user || !user.passwordIsValid(password)) {
     return { success: false, message: 'invalid data' };
@@ -26,6 +28,8 @@ const create = async (
 
   const [accessToken, refreshToken, hashedRefreshToken] =
     GenerateToken.generateSessionTokens(user.id);
+
+  await Repo.remove(AccessToken, { user });
 
   await Repo.insert(AccessToken, {
     code: hashedRefreshToken,

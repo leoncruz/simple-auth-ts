@@ -26,7 +26,7 @@ const update = async (
 };
 
 const findOne = async (entity: any, values: any) => {
-  return await AppDataSource.manager.findOneBy(entity, values);
+  return await AppDataSource.manager.findOne(entity, values);
 };
 
 export const Repo = {

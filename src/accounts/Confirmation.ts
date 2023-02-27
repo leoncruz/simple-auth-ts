@@ -14,7 +14,7 @@ type SendConfirmationAccountToken = {
 const sendConfirmationAccountToken = async (
   email: string
 ): Promise<SendConfirmationAccountToken> => {
-  const existingUser = await Repo.findOne(User, { email });
+  const existingUser = await Repo.findOne(User, { where: { email } });
 
   if (!existingUser) {
     return { success: false };
@@ -51,7 +51,7 @@ const confirmAccountToken = async (
   const hashedToken = Crypto.hmacDigest(token);
 
   const existingUser = await Repo.findOne(User, {
-    confirmationToken: hashedToken
+    where: { confirmationToken: hashedToken }
   });
 
   if (!existingUser) {

@@ -28,7 +28,7 @@ const init = async (req: Request, resp: Response, next: NextFunction) => {
     });
   }
 
-  const user = new User(await Repo.findOne(User, data));
+  const user = new User(await Repo.findOne(User, { where: { id: data } }));
 
   if (!user.id) {
     resp.statusCode = 401;

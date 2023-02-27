@@ -7,7 +7,7 @@ export const AppDataSource = new DataSource({
   port: 5432,
   username: 'postgres',
   database: 'simple_auth_ts_dev',
-  logging: false,
+  logging: true,
   entities: [`${__dirname}/entities/**/*.ts`],
   migrations: [`${__dirname}/migrations/**/*.ts`]
 });
