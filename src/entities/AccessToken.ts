@@ -1,3 +1,4 @@
+import { isAfter } from 'date-fns';
 import {
   Column,
   CreateDateColumn,
@@ -34,4 +35,8 @@ export class AccessToken {
   @ManyToOne(() => User, (user) => user.accessTokens)
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  get isValid(): boolean {
+    return isAfter(this.expiresIn, new Date());
+  }
 }

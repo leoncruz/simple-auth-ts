@@ -29,8 +29,13 @@ const findOne = async (entity: any, values: any) => {
   return await AppDataSource.manager.findOne(entity, values);
 };
 
+const remove = async (entity: any, values: any) => {
+  return await AppDataSource.manager.delete(entity, values);
+};
+
 export const Repo = {
   insert,
   update,
-  findOne
+  findOne,
+  remove
 };

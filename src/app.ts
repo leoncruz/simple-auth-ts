@@ -18,6 +18,8 @@ app.post('/users/signup', UserRegistrationController.create);
 
 app.post('/users/signin', UserSessionController.create);
 
+app.post('/users/refresh', UserSessionController.refresh);
+
 app.patch('/users/confirm', UserConfirmationController.update);
 
 app.post('/users/confirm', UserConfirmationController.create);
