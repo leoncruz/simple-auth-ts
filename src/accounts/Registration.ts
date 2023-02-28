@@ -27,7 +27,7 @@ const registrationUser = async (
 
   console.log({ plainToken });
 
-  // send plainToken to user using email, sms, ect
+  // send plainToken to user using email, sms, etc
 
   await Repo.update(User, user.id, {
     confirmationToken: hashedToken,

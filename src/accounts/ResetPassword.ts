@@ -33,14 +33,14 @@ const createResetPasswordToken = async (
     return { success: false, message: 'token cannot be sended' };
   }
 
-  // send plainResetPasswordToken to user using email, sms, ect
+  // send plainResetPasswordToken to user using email, sms, etc
 
   return { success: true, message: 'token was sended' };
 };
 
 const validateResetPasswordToken = async (
   token: string
-): Promise<{ success: boolean; message: string }> => {
+): Promise<{ success: boolean; message: string; newResetToken?: string }> => {
   const hashedResetPasswordToken = Crypto.hmacDigest(token);
 
   const user = new User(
@@ -60,21 +60,27 @@ const validateResetPasswordToken = async (
     return { success: false, message: 'token is invalid or has expired' };
   }
 
+  const newResetToken = Crypto.generateUUID();
+  const hashedNewResetToken = Crypto.hmacDigest(newResetToken);
+
   await Repo.update(User, user.id, {
-    resetPasswordToken: null,
+    resetPasswordToken: hashedNewResetToken,
     resetPasswordTokenSentAt: null
   });
 
-  return { success: true, message: 'valid token' };
+  return { success: true, message: 'valid token', newResetToken };
 };
 
 const update = async (
   email: string,
-  newPassword: string
+  newPassword: string,
+  resetPasswordToken: string
 ): Promise<{ success: boolean; message: string }> => {
+  const hashedResetToken = Crypto.hmacDigest(resetPasswordToken);
+
   const user = new User(
     await Repo.findOne(User, {
-      where: { email }
+      where: { email, resetPasswordToken: hashedResetToken }
     })
   );
 
@@ -82,7 +88,10 @@ const update = async (
 
   user.changePassword(newPassword);
 
-  const result = await Repo.update(User, user.id, user);
+  const result = await Repo.update(User, user.id, {
+    encryptedPassword: user.password,
+    resetPasswordToken: null
+  });
 
   if (!result) {
     return { success: false, message: 'password cannot be updated.' };

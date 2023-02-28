@@ -20,9 +20,8 @@ const create = async (req: Request, resp: Response) => {
 const validate = async (req: Request, resp: Response) => {
   const { token } = req.body;
 
-  const { success, message } = await ResetPassword.validateResetPasswordToken(
-    token
-  );
+  const { success, message, newResetToken } =
+    await ResetPassword.validateResetPasswordToken(token);
 
   if (!success) {
     resp.statusCode = 401;
@@ -30,13 +29,17 @@ const validate = async (req: Request, resp: Response) => {
   }
 
   resp.statusCode = 200;
-  resp.json({ data: {}, message, success });
+  resp.json({ data: { toke: newResetToken }, message, success });
 };
 
 const update = async (req: Request, resp: Response) => {
-  const { email, password } = req.body;
+  const { email, password, reset_token: resetToken } = req.body;
 
-  const { success, message } = await ResetPassword.update(email, password);
+  const { success, message } = await ResetPassword.update(
+    email,
+    password,
+    resetToken
+  );
 
   if (!success) {
     resp.statusCode = 400;
